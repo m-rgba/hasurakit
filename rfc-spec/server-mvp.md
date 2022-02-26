@@ -30,9 +30,11 @@ Env variables:
 ### `/v1/auth/login`
 **Method**:
 - POST
+
 **Arguments**:
 - Username
 - Password
+
 **Logic**:
 - Returns a session as a httpOnly cookie which will be used for auth
 
@@ -44,18 +46,21 @@ Env variables:
 ### `/v1/users`
 **Method**:
 - GET
+
 **Response**:
 - username
 - allow_users
 - allow_graphql
 - allow_metadata
 - allow_migrations
+
 **Logic**:
 - Gets users from SQLite database via Knex
 
 ### `/v1/user/create`
 **Method**:
 - POST
+
 **Arguments**:
 - username
 - allow_users
@@ -63,26 +68,31 @@ Env variables:
 - allow_metadata
 - allow_migrations
 - password
+
 **Response**:
 - 200: User Created
+
 **Logic**:
 - Created user with hashed password in Knex database
 
 ### `/v1/user/[id]`
 **Method**:
 - GET
+
 **Response**:
 - username
 - allow_users
 - allow_graphql
 - allow_metadata
 - allow_migrations
+
 **Logic**:
 - Gets user ID from  SQLite database via Knex
 
 ### `/v1/user/edit/[id]`
 **Method**:
 - POST
+
 **Arguments**:
 - username
 - allow_users
@@ -90,16 +100,20 @@ Env variables:
 - allow_metadata
 - allow_migrations
 - password (optional)
+
 **Response**:
 - 200: User Updated
+
 **Logic**:
 - Updates user ID in Knex database - re-hash if password present
 
 ### `/v1/user/delete/[id]`
 **Method**:
 - DELETE
+
 **Response**:
 - 200: User Deleted
+
 **Logic**:
 - Delete's user ID in Knex database
 
@@ -110,13 +124,17 @@ Env variables:
 
 ### `/v1/graphql`
 - Proxy for GraphQL endpoint - takes in body / headers - replaces with admin secret. 
+
 **Method**: 
 - POST
+
 **Proxies**:
 - https://hasura.io/docs/latest/graphql/core/api-reference/graphql-api/index.html#endpoint
+
 **Headers**:
 - Set  `x-hasura-admin-secret` from environment variable `HASURA_ADMINSECRET`
 - Pass through other headers
+
 **Arguments**:
 - Pass on arguments as body
 
@@ -131,8 +149,10 @@ Env variables:
 
 ### `/v1/metadata/get`
 - Gets metadata - saves as JSON to directory.
+
 **Method**:
 - GET
+
 **Proxies**:
 - https://hasura.io/docs/latest/graphql/core/api-reference/metadata-api/manage-metadata.html#export-metadata
 ```json
@@ -142,8 +162,10 @@ Env variables:
      "args": {}
 }
 ```
+
 **Response**:
 - JSON
+
 **Logic**:
 - Gets metadata as JSON
 - Saves metadata to `/home/node/project/metadata` folder
@@ -151,11 +173,14 @@ Env variables:
 
 ### `/v1/metadata/set`
 - Updates metadata - shows status  - saves copy of backup before applying.
+
 **Method**: 
 - POST
+
 **Proxies**:
 - https://hasura.io/docs/latest/graphql/core/api-reference/metadata-api/manage-metadata.html#export-metadata then ->
 - https://hasura.io/docs/latest/graphql/core/api-reference/metadata-api/manage-metadata.html#replace-metadata
+
 **Arguments**:
 	- JSON (metadata)
 ```json
@@ -168,8 +193,10 @@ Env variables:
     }
 }
 ```
+
 **Response**:
 - JSON
+
 **Logic**:
 - Gets metadata backup as JSON through metadata export
 	- Saves metadata to `/home/node/project/metadata` folder
@@ -182,8 +209,10 @@ Env variables:
 
 ### `/v1/metadata/history`
 - Gets metadata which has been saved previously.
+
 **Method**:
 - GET
+
 **Response**:
 - Gets file list from `home/node/project/metadata` directory
 - JSON - breaks up:
@@ -193,8 +222,10 @@ Env variables:
 
 ### `/v1/metadata/history/[filename]`
 - Shows data from JSON file.
+
 **Method**:
 - GET
+
 **Response**:
 - Displays data from filename
 
@@ -209,10 +240,13 @@ Env variables:
 
 ### `/v1/migration/set`
 - Runs some SQL against data source - saves SQL to directory.
+
 **Method**:
 - POST
+
 **Proxies**:
 - https://hasura.io/docs/latest/graphql/core/api-reference/schema-api/run-sql.html#run-sql
+
 **Arguments**:
 - source (optional -> default to `default`)
 - sql
@@ -225,8 +259,10 @@ Env variables:
     }
 }
 ```
+
 **Response**:
 - JSON response
+
 **Logic**:
 - If response = 200:
 	- Saves the run SQL to `/home/node/project/migration` folder
@@ -237,8 +273,10 @@ Env variables:
 
 ### `/v1/migration/history`
 - Gets SQL which has been saved previously.
+
 **Method**:
 - GET
+
 **Response**:
 - Gets file list from `home/node/project/migration` directory
 - JSON - breaks up:
@@ -250,7 +288,9 @@ Env variables:
 
 ### `/v1/migration/history/[filename]`
 - Shows data (text) from SQL file.
+
 **Method**:
 - GET
+
 **Response**:
 - Displays data from filename
