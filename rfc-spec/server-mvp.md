@@ -3,7 +3,8 @@ Env variables:
 - `WATCHTOWER_SECRET` > secret for signing this service's sessions / etc.
 - `WATCHTOWER_ADMIN_USER` > (optional) Seed admin user (will have full credentials)
 - `WATCHTOWER_ADMIN_PASS` > (optional) Seed admin password
-- `HASURA_ADMINSECRET` > secret API key for server we're proxying
+- `HASURA_URL` > URL of Hasura instance
+- `HASURA_ADMIN_SECRET` > secret API key for server we're proxying
 
 ---
 

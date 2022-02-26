@@ -12,7 +12,8 @@ services:
       WATCHTOWER_SECRET: watchtowersecretforhash
       WATCHTOWER_ADMIN_USER: admin
       WATCHTOWER_ADMIN_PASS: password
-      HASURA_ADMINSECRET: myadminsecret
+      HASURA_URL: http://localhost:8080
+      HASURA_ADMIN_SECRET: myadminsecret
     volumes:
       # Server files
       - ./app:/home/node/app
