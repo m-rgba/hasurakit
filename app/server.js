@@ -1,14 +1,32 @@
-import express from 'express';
+const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require("cors");
+const cookieParser = require('cookie-parser');
+const userRouter = require('./routes/userRouter');
+const dotenv = require("dotenv");
+dotenv.config();
 
-// Constants
-const PORT = 5000;
-const HOST = '0.0.0.0';
 
-// App
 const app = express();
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+// enabling cors for all requests by using cors middleware
+app.use(cors());
+// Enable pre-flight
+app.options("*", cors());
+app.use(cookieParser());
+
+const port = 5000;
+
+app.use(bodyParser.json());
+
 app.get('/', (req, res) => {
-  res.send(`Hello ${process.env.WATCHTOWER_ADMIN_USER}`);
+  res.send('Hello World!');
 });
 
-app.listen(PORT, HOST);
-console.log(`Running on http://${HOST}:${PORT}`);
+app.use('/v1', userRouter)
+
+app.listen(port, () => {
+  console.log(`Server is listening at http://localhost:${port}`);
+});
