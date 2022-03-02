@@ -20,7 +20,7 @@ const isAllowedUser = require('../middleware/authUser');
 router.get("/test", isAllowedUser(), (req, res) => res.json({ msg: "Users works!!" }));
 
 //set cookie using name and password
-router.post('/auth/login', isAllowedUser(), async (req, res) => {
+router.post('/auth/login', async (req, res) => {
     const name = req.body.name ? req.body.name : '';
     const password = req.body.password ? req.body.password : '';
     
