@@ -10,7 +10,7 @@ dotenv.config();
 //initialize knex
 const knex = require('knex')(knexConfig[process.env.NODE_ENV]);
 //allowed user middleware
-const isAllowedUser = require('../middleware/authUser');
+const {isAllowedUser, isAllowedGrphql, isAllowedMetadata} = require('../middleware/authUser');
 
 
 
@@ -186,5 +186,31 @@ router.delete('/user/:id', isAllowedUser(), async (req, res) => {
         return res.json({success: false, message: 'An error occurred, please try again later.'});
     });
 });
+
+
+
+//graphql
+router.post('/graphql', isAllowedGrphql(), (req, res) => {
+    res.send({'msg': 'ok'});
+})
+
+//metadata
+
+router.get('/metadata/get', isAllowedMetadata(), (req, res) => {
+    res.send({'msg': 'ok'});
+})
+
+router.put('/metadata/set', isAllowedMetadata(), (req, res) => {
+    res.send({'msg': 'ok'});
+})
+
+router.get('/metadata/history', isAllowedMetadata(), (req, res) => {
+    res.send({'msg': 'ok'});
+})
+router.get('/metadata/history/:filename', isAllowedMetadata(), (req, res) => {
+    res.send({'msg': 'ok'});
+})
+
+
 
 module.exports = router;
