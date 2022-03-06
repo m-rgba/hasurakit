@@ -4,4 +4,4 @@ admin_secret: myadminsecret
 metadata_directory: metadata
 actions:
   kind: synchronous
-  handler_webhook_baseurl: http://localhost:5000
+  handler_webhook_baseurl: http://localhost:3000
