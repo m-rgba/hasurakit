@@ -50,7 +50,7 @@ const isAllowedGrphql = () => {
             if (!user[0].allow_graphql ) {
                 throw new HttpException(401, "Access denied. No allowed user!");
             }
-            res.setHeader('x-hasura-admin-secret', 'HASURA_ADMINSECRET');
+            res.setHeader('x-hasura-admin-secret', `${process.env.HASURA_ADMIN_SECRET}`);
             next();
           } else {
             throw new HttpException(401, "User is not allowed");
@@ -83,6 +83,8 @@ const isAllowedMetadata = () => {
             if (!user[0].allow_metadata ) {
                 throw new HttpException(401, "Access denied. No allowed user!");
             }
+            res.setHeader('x-hasura-admin-secret', `${process.env.HASURA_ADMIN_SECRET}`);
+            res.setHeader('x-hasura-role', 'admin');
             next();
           } else {
             throw new HttpException(401, "User is not allowed");

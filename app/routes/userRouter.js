@@ -2,6 +2,7 @@ const express = require("express");
 const dayjs = require('dayjs');
 const bcrypt = require("bcryptjs");
 const router = express.Router();
+const fetch = require("node-fetch");
 const hashPassword = require('../utils/common');
 const dotenv = require("dotenv");
 const knexConfig = require('../db/knexfile');
@@ -12,7 +13,7 @@ const knex = require('knex')(knexConfig[process.env.NODE_ENV]);
 //allowed user middleware
 const {isAllowedUser, isAllowedGrphql, isAllowedMetadata} = require('../middleware/authUser');
 
-
+const HSAURA_SERVER = `${process.env.HASURA_URL}/v1/graphql`
 
 /************* routers ************/
 
@@ -189,9 +190,39 @@ router.delete('/user/:id', isAllowedUser(), async (req, res) => {
 
 
 
+const execute = async (variables, HASURA_OPERATION, reqHeaders) => {
+    const fetchResponse = await fetch(
+      HSAURA_SERVER,
+      {
+        method: 'POST',
+        headers: reqHeaders || {},
+        body: JSON.stringify({
+          query: HASURA_OPERATION,
+          variables
+        })
+      }
+    );
+    return await fetchResponse.json();
+};
+
 //graphql
-router.post('/graphql', isAllowedGrphql(), (req, res) => {
-    res.send({'msg': 'ok'});
+router.post('/graphql', isAllowedGrphql(), async (req, res) => {
+    const HASURA_OPERATION = `
+    mutation ($name: String!, $password: String!, $allow_users. $allow_graphql, $allow_metadata, $allow_migrations) {
+      insert_users_one(object: {
+        name: $name,
+        password: $password,
+        allow_users: $allow_users,
+        allow_graphql: $allow_graphql,
+        allow_metadata: $allow_metadata,
+        allow_migrations: $allow_migrations,
+      }) {
+        id
+      }
+    }`;
+    const { data } = await execute({}, HASURA_OPERATION, req.headers);
+
+    res.json({ success: true, message: data});
 })
 
 //metadata
