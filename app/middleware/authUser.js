@@ -117,6 +117,9 @@ const isAllowedMigrations = () => {
             if (!user[0].allow_migrations ) {
                 throw new HttpException(401, "Access denied. No allowed user!");
             }
+            res.setHeader('Content-Type', 'application/json');
+            res.setHeader('x-hasura-admin-secret', `${process.env.HASURA_ADMIN_SECRET}`);
+            res.setHeader('x-hasura-role', 'admin');
             next();
           } else {
             throw new HttpException(401, "User is not allowed");

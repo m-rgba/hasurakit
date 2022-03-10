@@ -11,9 +11,7 @@ dotenv.config();
 //initialize knex
 const knex = require('knex')(knexConfig[process.env.NODE_ENV]);
 //allowed user middleware
-const {isAllowedUser, isAllowedGrphql, isAllowedMetadata} = require('../middleware/authUser');
-
-const HSAURA_SERVER = `${process.env.HASURA_URL}/v1/graphql`
+const {isAllowedUser, isAllowedGrphql, isAllowedMetadata, isAllowedMigrations} = require('../middleware/authUser');
 
 /************* routers ************/
 
@@ -188,11 +186,9 @@ router.delete('/user/:id', isAllowedUser(), async (req, res) => {
     });
 });
 
-
-
-const execute = async (variables, HASURA_OPERATION, reqHeaders) => {
+const execute = async (URL, variables, HASURA_OPERATION, reqHeaders) => {
     const fetchResponse = await fetch(
-      HSAURA_SERVER,
+      URL,
       {
         method: 'POST',
         headers: reqHeaders || {},
@@ -220,26 +216,43 @@ router.post('/graphql', isAllowedGrphql(), async (req, res) => {
         id
       }
     }`;
-    const { data } = await execute({}, HASURA_OPERATION, req.headers);
+    const { data } = await execute(`${process.env.HASURA_URL}/v1/graphql`, {}, HASURA_OPERATION, req.headers);
 
     res.json({ success: true, message: data});
 })
 
 //metadata
 
-router.get('/metadata/get', isAllowedMetadata(), (req, res) => {
+router.get('/metadata/get', isAllowedMetadata(), async (req, res) => {
     res.send({'msg': 'ok'});
 })
 
-router.put('/metadata/set', isAllowedMetadata(), (req, res) => {
+router.put('/metadata/set', isAllowedMetadata(), async (req, res) => {
     res.send({'msg': 'ok'});
 })
 
-router.get('/metadata/history', isAllowedMetadata(), (req, res) => {
+router.get('/metadata/history', isAllowedMetadata(), async (req, res) => {
     res.send({'msg': 'ok'});
 })
-router.get('/metadata/history/:filename', isAllowedMetadata(), (req, res) => {
+router.get('/metadata/history/:filename', isAllowedMetadata(), async (req, res) => {
     res.send({'msg': 'ok'});
+})
+
+
+//migrations
+router.get('/migrations/set', isAllowedMigrations(), async (req, res) => {
+    const HASURA_OPERATION = `
+    {
+        "type":"run_sql",
+        "args": {
+          "source": "default",
+          "sql": "create table item ( id serial,  name text,  category text,  primary key (id))",
+          "check_metadata_consistency": false
+        }
+    }`
+    const { data } = await execute(`${process.env.HASURA_URL}/v2/query`, {}, HASURA_OPERATION, req.headers);
+
+    res.json({ success: true, message: data});
 })
 
 
