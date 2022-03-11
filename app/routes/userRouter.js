@@ -9,7 +9,6 @@ const knexConfig = require('../db/knexfile');
 const HttpException = require('../utils/HttpException');
 const fs = require('fs');
 dotenv.config();
-const basePath = process.cwd();
 //initialize knex
 const knex = require('knex')(knexConfig[process.env.NODE_ENV]);
 //allowed user middleware
