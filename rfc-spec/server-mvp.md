@@ -284,7 +284,7 @@ Env variables:
 	- Datetime
 	- Source
 	- Success / Failure State
-	- Filename 
+	- Filename
 
 ### `/v1/migration/history/[filename]`
 - Shows data (text) from SQL file.
