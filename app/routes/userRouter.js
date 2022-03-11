@@ -211,7 +211,7 @@ router.post('/graphql', isAllowedGrphql(), async (req, res) => {
 
 //metadata
 
-router.get('/metadata/get', async (req, res) => {
+router.get('/metadata/get', isAllowedMetadata(), async (req, res) => {
 
     const reqBody = {
         "type": "export_metadata",
@@ -226,7 +226,7 @@ router.get('/metadata/get', async (req, res) => {
 
     const fetchResponse = await fetch(`${process.env.HASURA_URL}/v1/metadata`, options);
     const responseJson = await fetchResponse.json();
-
+    
     const jsonObj = JSON.parse(JSON.stringify(responseJson));
 
     const username = req.headers.authorization;
@@ -243,11 +243,10 @@ router.get('/metadata/get', async (req, res) => {
 
     fs.writeFileSync(`../project/metadata/${username}_${dateTime}__metadata_get.json`, JSON.stringify(jsonObj), 'utf8', function (err) {
         if (err) {
-            console.log("An error occured while writing JSON Object to File.");
             return res.json({success: false, message: 'An error occurred, please try again later.'});
         }
-        return res.json({success: true, message: 'successfully saved as json file'});
     });
+    res.json({success: true, message: 'successfully saved as json file'});
 })
 
 router.put('/metadata/set', isAllowedMetadata(), async (req, res) => {
@@ -283,7 +282,6 @@ router.put('/metadata/set', isAllowedMetadata(), async (req, res) => {
             console.log("An error occured while writing JSON Object to File.");
             return res.json({success: false, message: 'An error occurred, please try again later.'});
         }
-        return res.json({success: true, message: 'successfully saved as json file'});
     });
 
 
@@ -321,14 +319,15 @@ router.put('/metadata/set', isAllowedMetadata(), async (req, res) => {
             console.log("An error occured while writing JSON Object to File.");
             return res.json({success: false, message: 'An error occurred, please try again later.'});
         }
-        return res.json({success: true, message: 'successfully saved as json file'});
+        
     });
+    return res.json({success: true, message: 'successfully write and replaced as json files'});
 })
 
 router.get('/metadata/history', isAllowedMetadata(), async (req, res) => {
     let fileLists = [];
     let jsonLists = [];
-    fileLists = fs.readdirSync(`${basePath}/project/metadata`);
+    fileLists = fs.readdirSync('../project/metadata');
     fileLists.forEach(filename => {
         const ext = filename.split('.').pop();
         if (ext === 'json') {
@@ -351,18 +350,18 @@ router.get('/metadata/history', isAllowedMetadata(), async (req, res) => {
         responseValue.push(jsonObj)
     });
 
-    return res.json({success: true, message: 'successfully got json files', value: responseValue});
+    res.json({success: true, message: 'successfully got json files', value: responseValue});
 
 })
 router.get('/metadata/history/:filename', isAllowedMetadata(), async (req, res) => {
     const filename = req.params.filename + '.json';
     let fileLists = [];
-    fileLists = fs.readdirSync(`${basePath}/project/metadata`);
+    fileLists = fs.readdirSync('../project/metadata');
     if (!fileLists.includes(filename)) {
         return res.json({success: false, message: 'An error occurred, please try again later.'});
     }
 
-    let rawdata = fs.readFileSync(`${basePath}/project/metadata/${filename}`);
+    let rawdata = fs.readFileSync(`../project/metadata/${filename}`);
     let resVal = JSON.parse(rawdata);
     return res.json({success: false, message: 'successfully get the contnet of the json file.', value: resVal});
 })
@@ -423,7 +422,7 @@ router.post('/migration/set', isAllowedMigrations(), async (req, res) => {
 router.get('/migration/history', isAllowedMigrations(), async (req, res) => {
     let fileLists = [];
     let jsonLists = [];
-    fileLists = fs.readdirSync(`${basePath}/project/migration`);
+    fileLists = fs.readdirSync('../project/migration');
     fileLists.forEach(filename => {
         const ext = filename.split('.').pop();
         if (ext === 'json') {
@@ -450,21 +449,21 @@ router.get('/migration/history', isAllowedMigrations(), async (req, res) => {
         responseValue.push(jsonObj)
     });
 
-    return res.json({success: true, message: 'successfully got json files', value: responseValue});
+    res.json({success: true, message: 'successfully got json files', value: responseValue});
 });
 
 
 router.get('/migration/history/:filename', isAllowedMigrations(), async (req, res) => {
     const filename = req.params.filename + '.json';
     let fileLists = [];
-    fileLists = fs.readdirSync(`${basePath}/project/migration`);
+    fileLists = fs.readdirSync('../project/migration');
     if (!fileLists.includes(filename)) {
         return res.json({success: false, message: 'An error occurred, please try again later.'});
     }
 
-    let rawdata = fs.readFileSync(`${basePath}/project/metadata/${filename}`);
+    let rawdata = fs.readFileSync('../project/metadata/${filename}');
     let resVal = JSON.parse(rawdata);
-    return res.json({success: false, message: 'successfully get the contnet of the json file.', value: resVal});
+    res.json({success: false, message: 'successfully get the contnet of the json file.', value: resVal});
 })
 
 module.exports = router;
