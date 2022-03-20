@@ -1,2 +1,2 @@
-# hasura-watchtower
-A refreshed control plane for managing your Hasura instance.
+# HasuraKit
+Services, helpers, and cookbooks for deploying your next Hasura instance.
