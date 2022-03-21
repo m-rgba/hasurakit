@@ -1,8 +1,8 @@
 version: '3.6'
 services:
 
+  ## Default Hasura Setup ##
   postgres:
-    container_name: kit_postgres
     image: postgres:14
     restart: always
     ports:
@@ -18,7 +18,6 @@ services:
       retries: 5
 
   hasura:
-    container_name: kit_hasura
     image: hasura/graphql-engine:v2.3.1
     restart: always
     ports:
@@ -39,22 +38,17 @@ services:
       timeout: 3s
       retries: 5
 
+  ## CLI Deployment Example ##
   cli:
-    container_name: kit_cli
-    build: ./cli
-    restart: always
-    ports:
-      - 9693:9693
-      - 9695:9695
+    build: ../../cli
     depends_on:
       hasura:
         condition: service_healthy
     volumes:
-      # Project Files
       - ./hasura:/usr/src/hasura
+      - ./migrate.sh:/usr/src/migrate.sh
+    command: bash -c "/usr/src/migrate.sh"
     environment:
-      # Exclude protocol / use host.docker.internal if internal
       HASURA_URL: host.docker.internal:8080
       HASURA_PROTOCOL: HTTP://
       HASURA_GRAPHQL_ADMIN_SECRET: adminsecret
-      CLI_MODE: cli
