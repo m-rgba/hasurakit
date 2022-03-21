@@ -1,5 +1,5 @@
 # HasuraKit
-Services, helpers, and cookbooks for deploying your next Hasura instance.
+Services, helpers, and recipes for deploying your next Hasura instance.
 
 ## Getting Started
 Basic starter - setting up your initial Hasura + Postgres instance:
