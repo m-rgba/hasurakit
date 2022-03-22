@@ -1,10 +1,9 @@
 #!/bin/bash
 
 # Add Gitpod user / take ownership
-useradd -ms /bin/bash gitpod
-chown -R gitpod:gitpod /usr/src/cli
-chown -R gitpod:gitpod /usr/src/hasura
-su gitpod
+addgroup --gid 13337 cligroup
+RUN adduser --disabled-password --gecos "" --force-badname --ingroup 13337 cliuser 
+su cliuser
 
 cd /usr/src/hasura
 

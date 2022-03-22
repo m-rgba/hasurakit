@@ -1,6 +1,6 @@
 tasks:
   - init: docker-compose build
-    command: docker-compose -f docker-compose.gitpod.yml up -d
+    command: chown :13337 -R ./hasura && chmod 775 ./hasura && chmod g+s ./hasura && docker-compose -f docker-compose.gitpod.yml up -d
 
 ports:
   ## Hasura Instance
