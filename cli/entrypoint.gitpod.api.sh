@@ -1,4 +1,5 @@
 #!/bin/bash
+chmod /usr/src/hasura
 cd /usr/src/hasura
 
 echo "Starting Console API 💻 (https://9693-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST})"

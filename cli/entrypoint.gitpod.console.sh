@@ -1,4 +1,5 @@
 #!/bin/bash
+chmod /usr/src/hasura
 cd /usr/src/hasura
 
 ## Run Migrations
