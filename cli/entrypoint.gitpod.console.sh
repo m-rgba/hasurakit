@@ -1,4 +1,5 @@
 #!/bin/bash
+chown -R gitpod /usr/src/hasura
 cd /usr/src/hasura
 
 ## Run Migrations

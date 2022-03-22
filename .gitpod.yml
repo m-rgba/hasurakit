@@ -1,6 +1,6 @@
 tasks:
   - init: docker-compose build
-    command: docker-compose -f docker-compose.gitpod.yml up -d && sudo chown -R gitpod ./hasura
+    command: docker-compose -f docker-compose.gitpod.yml up -d
 
 ports:
   ## Hasura Instance
