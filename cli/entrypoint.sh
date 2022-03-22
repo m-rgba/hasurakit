@@ -19,13 +19,13 @@ socat TCP-LISTEN:9693,fork,reuseaddr,bind=cli TCP:127.0.0.1:9693 &
             fi
             if [[ ${CLI_RUN_MIGRATE} == *'migrations'* ]] 
             then
-                    echo "Loading migrations to databases (migration apply --all-databases)... 🚀"
-                    hasura migrate apply --endpoint "${HASURA_PROTOCOL}${HASURA_URL}" --admin-secret "${HASURA_GRAPHQL_ADMIN_SECRET}" --all-databases || exit 1
+                echo "Loading migrations to databases (migration apply --all-databases)... 🚀"
+                hasura migrate apply --endpoint "${HASURA_PROTOCOL}${HASURA_URL}" --admin-secret "${HASURA_GRAPHQL_ADMIN_SECRET}" --all-databases || exit 1
             fi
             if [[ ${CLI_RUN_MIGRATE} == *'metadata'* ]] 
             then
                 echo "Reloading metadata to ensure consistency (metadata reload)... ⚓"
-                hasura metadata reload --endpoint "${HASURA_PROTOCOL}${HASURA_URL}" --admin-secret "${HASURA_GRAPHQL_ADMIN_SECRET}" || exit 1 || exit 1
+                hasura metadata reload --endpoint "${HASURA_PROTOCOL}${HASURA_URL}" --admin-secret "${HASURA_GRAPHQL_ADMIN_SECRET}" || exit 1
             fi
         else
             echo "No Hasura project found ❌ Skipping metadata / migrations... "

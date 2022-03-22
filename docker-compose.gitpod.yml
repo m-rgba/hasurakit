@@ -1,11 +1,53 @@
 version: '3.6'
 services:
+
+  ## Default Hasura Services
+  postgres:
+    container_name: kit_postgres
+    image: postgres:14
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  hasura:
+    container_name: kit_hasura
+    image: hasura/graphql-engine:v2.3.1
+    restart: always
+    ports:
+      - 8080:8080
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      HASURA_GRAPHQL_ENABLE_CONSOLE: 'true'
+      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:password@postgres:5432/postgres
+      HASURA_GRAPHQL_ADMIN_SECRET: adminsecret
+      HASURA_GRAPHQL_JWT_SECRET: '{"type":"HS256", "key":"generateasecurepasswordforyourjwtkey", "issuer":"hasura-auth"}'
+      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
+      HASURA_GRAPHQL_DEV_MODE: 'true'
+    healthcheck:
+      test: ["CMD-SHELL", "apt-get update -y && apt-get install -y curl && curl --fail http://localhost:8080/healthz || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  ## CLI Services
   cli:
     container_name: kit_cli
     build: ./cli
     restart: always
     ports:
       - 9695:9695
+    entrypoint: ./cli/entrypoint.gitpod.sh
     depends_on:
       hasura:
         condition: service_healthy
@@ -14,10 +56,11 @@ services:
       - ./hasura:/usr/src/hasura
     environment:
       # Exclude protocol / use host.docker.internal if internal
-      HASURA_URL: host.docker.internal:8080
-      HASURA_PROTOCOL: HTTP://
       HASURA_GRAPHQL_ADMIN_SECRET: adminsecret
       CLI_MODE: console
+      CLI_RUN_MIGRATE: '[metadata, migrations]'
+      GITPOD_WORKSPACE_ID: ${GITPOD_WORKSPACE_ID}
+      GITPOD_WORKSPACE_CLUSTER_HOST: ${GITPOD_WORKSPACE_CLUSTER_HOST}
     labels:
       - traefik.enable=true
       - traefik.http.routers.hasura_cli_console.rule=Host(`9695-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}`)
@@ -49,7 +92,7 @@ services:
 
   traefik:
     image: traefik:v2.6
-    container_name: traefik
+    container_name: kit_traefik
     command:
       - --log.level=DEBUG
       - --api.insecure=true

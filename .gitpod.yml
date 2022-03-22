@@ -1,0 +1,9 @@
+tasks:
+  - init: docker-compose build
+    command: docker-compose -f docker-compose.gitpod.yml up
+
+ports:
+  - port: 8080
+    visibility: public
+  - port: 9693
+    visibility: public
