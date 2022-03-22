@@ -1,5 +1,4 @@
 #!/bin/bash
-chown -R gitpod /usr/src/hasura
 cd /usr/src/hasura
 
 ## Run Migrations
@@ -67,3 +66,6 @@ then
         tail -f /dev/null
     fi
 fi
+
+# Let Gitpod have ownership of created directories (if any)
+chown -R gitpod /usr/src/hasura
