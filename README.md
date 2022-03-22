@@ -21,7 +21,7 @@ and the run the specific services below you'd like to run (currently just CLI / 
 
 This repo has been modified to be deployed with Gitpod for your cloud dev environment 🪄
 
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://github.com/m-rgba/hasurakit/tree/main)
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/m-rgba/hasurakit/tree/main)
 
 Recommend forking / cloning this repo -- all project files from CLI Console in Gitpod will be found in your `./hasura` folder and will be commit-able from Gitpod.
 
