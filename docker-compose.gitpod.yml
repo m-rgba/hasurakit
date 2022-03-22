@@ -34,6 +34,7 @@ services:
       HASURA_GRAPHQL_JWT_SECRET: '{"type":"HS256", "key":"generateasecurepasswordforyourjwtkey", "issuer":"hasura-auth"}'
       HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
       HASURA_GRAPHQL_DEV_MODE: 'true'
+      HASURA_GRAPHQL_CORS_DOMAINS: 'https://*-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}'
     healthcheck:
       test: ["CMD-SHELL", "apt-get update -y && apt-get install -y curl && curl --fail http://localhost:8080/healthz || exit 1"]
       interval: 5s
@@ -46,8 +47,8 @@ services:
     build: ./cli
     restart: always
     ports:
-      - 9695:9695
-    entrypoint: ./cli/entrypoint.gitpod.sh
+      - 9695
+    entrypoint: /usr/src/cli/entrypoint.gitpod.console.sh
     depends_on:
       hasura:
         condition: service_healthy
@@ -63,32 +64,31 @@ services:
       GITPOD_WORKSPACE_CLUSTER_HOST: ${GITPOD_WORKSPACE_CLUSTER_HOST}
     labels:
       - traefik.enable=true
-      - traefik.http.routers.hasura_cli_console.rule=Host(`9695-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}`)
-      - traefik.http.routers.hasura_cli_console.entrypoints=web
+      - traefik.http.routers.kit_cli.rule=Host(`9695-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}`)
+      - traefik.http.routers.kit_cli.entrypoints=web
 
   cli_api:
     container_name: kit_cli_api
     build: ./cli
     restart: always
     expose:
-      - 9693:9693
+      - 9693
+    entrypoint: /usr/src/cli/entrypoint.gitpod.api.sh
     depends_on:
       hasura:
         condition: service_healthy
     volumes:
       # Project Files
       - ./hasura:/usr/src/hasura
-    command:  hasura console --log-level DEBUG --address "kit_cli_api" --no-browser 
     environment:
       # Exclude protocol / use host.docker.internal if internal
-      HASURA_URL: host.docker.internal:8080
-      HASURA_PROTOCOL: HTTP://
       HASURA_GRAPHQL_ADMIN_SECRET: adminsecret
-      CLI_MODE: console
+      GITPOD_WORKSPACE_ID: ${GITPOD_WORKSPACE_ID}
+      GITPOD_WORKSPACE_CLUSTER_HOST: ${GITPOD_WORKSPACE_CLUSTER_HOST}
     labels:
       - traefik.enable=true
-      - traefik.http.routers.hasura_cli_api.rule=Host(`9693-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}`)
-      - traefik.http.routers.hasura_cli_api.entrypoints=web
+      - traefik.http.routers.kit_cli_api.rule=Host(`9693-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}`)
+      - traefik.http.routers.kit_cli_api.entrypoints=web
 
   traefik:
     image: traefik:v2.6
@@ -101,7 +101,6 @@ services:
       - --entrypoints.web.address=:80
     ports:
       - 80:80
-      - 8080:8080
       - 9693:80
       - 9695:80
     volumes:

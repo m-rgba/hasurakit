@@ -7,8 +7,11 @@ RUN echo "Getting CLI / Entrypoint..."
 RUN curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
 RUN chmod +x /usr/local/bin/hasura
 
-COPY ./entrypoint.sh /usr/src/cli/entrypoint.sh
+WORKDIR /usr/src/cli
+COPY . .
 RUN chmod +x /usr/src/cli/entrypoint.sh
+RUN chmod +x /usr/src/cli/entrypoint.gitpod.api.sh
+RUN chmod +x /usr/src/cli/entrypoint.gitpod.console.sh
 
 RUN echo "Starting..."
 WORKDIR /usr/src/hasura
