@@ -20,7 +20,7 @@ socat TCP-LISTEN:9693,fork,reuseaddr,bind=cli TCP:127.0.0.1:9693 &
             if [[ ${CLI_RUN_MIGRATE} == *'migrations'* ]] 
             then
                     echo "Loading migrations to databases (migration apply --all-databases)... 🚀"
-                    hasura migrate apply --endpoint "${HASURA_PROTOCOL}${HASURA_URL}" --admin-secret "${HASURA_GRAPHQL_ADMIN_SECRET}" || exit 1
+                    hasura migrate apply --endpoint "${HASURA_PROTOCOL}${HASURA_URL}" --admin-secret "${HASURA_GRAPHQL_ADMIN_SECRET}" --all-databases || exit 1
             fi
             if [[ ${CLI_RUN_MIGRATE} == *'metadata'* ]] 
             then

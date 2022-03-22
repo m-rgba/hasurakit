@@ -52,11 +52,13 @@ services:
     volumes:
       # Project Files
       - ./hasura:/usr/src/hasura
+    # command: bash -c "tail -f /dev/null"
     environment:
       # Exclude protocol / use host.docker.internal if internal
       HASURA_URL: host.docker.internal:8080
       HASURA_PROTOCOL: HTTP://
       HASURA_GRAPHQL_ADMIN_SECRET: adminsecret
       CLI_MODE: console
+      # Defines if metadata should be applied, or SQL migrations should be run on container startup.
       # Can include [metadata, migrations]
       CLI_RUN_MIGRATE: '[]'
