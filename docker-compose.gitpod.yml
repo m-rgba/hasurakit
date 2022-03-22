@@ -50,6 +50,7 @@ services:
     restart: always
     ports:
       - 9695
+    user: gitpod
     entrypoint: /usr/src/cli/entrypoint.gitpod.console.sh
     depends_on:
       hasura:
@@ -76,6 +77,7 @@ services:
     restart: always
     expose:
       - 9693
+    user: gitpod
     entrypoint: /usr/src/cli/entrypoint.gitpod.api.sh
     depends_on:
       hasura:
