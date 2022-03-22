@@ -80,6 +80,8 @@ services:
     depends_on:
       hasura:
         condition: service_healthy
+    volumes:
+      - ./hasura:/usr/src/hasura
     environment:
       HASURA_GRAPHQL_ADMIN_SECRET: adminsecret
       GITPOD_WORKSPACE_ID: ${GITPOD_WORKSPACE_ID}
