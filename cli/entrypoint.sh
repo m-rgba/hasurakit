@@ -1,6 +1,11 @@
 #!/bin/bash
 cd /usr/src/hasura
 
+####
+# More info on using `socat` for proxying requests locally / discussion around running CLI in containers 
+# https://github.com/hasura/graphql-engine/issues/2824
+####
+
 # Console Setup
 socat TCP-LISTEN:8080,fork TCP:${HASURA_URL} &
 socat TCP-LISTEN:9695,fork,reuseaddr,bind=cli TCP:127.0.0.1:9695 &
