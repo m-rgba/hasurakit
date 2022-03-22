@@ -1,0 +1,14 @@
+tasks:
+  - init: docker-compose build
+    command: docker-compose -f docker-compose.gitpod.yml up
+
+ports:
+  ## Hasura Instance
+  - port: 8080
+    visibility: public
+  ## CLI API
+  - port: 9693
+    visibility: public
+  ## CLI Console
+  - port: 9695
+    onOpen: open-browser

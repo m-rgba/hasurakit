@@ -1,0 +1,2 @@
+# Keep backups locally - don't checkin to git
+/.backup/*

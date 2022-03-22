@@ -1,0 +1,106 @@
+version: '3.6'
+services:
+
+  ## Default Hasura Services
+  postgres:
+    container_name: kit_postgres
+    image: postgres:14
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  hasura:
+    container_name: kit_hasura
+    image: hasura/graphql-engine:v2.3.1
+    restart: always
+    ports:
+      - 8080:8080
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      HASURA_GRAPHQL_ENABLE_CONSOLE: 'true'
+      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:password@postgres:5432/postgres
+      HASURA_GRAPHQL_ADMIN_SECRET: adminsecret
+      HASURA_GRAPHQL_JWT_SECRET: '{"type":"HS256", "key":"generateasecurepasswordforyourjwtkey", "issuer":"hasura-auth"}'
+      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
+      HASURA_GRAPHQL_DEV_MODE: 'true'
+      HASURA_GRAPHQL_CORS_DOMAINS: 'https://*-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}'
+    healthcheck:
+      test: ["CMD-SHELL", "apt-get update -y && apt-get install -y curl && curl --fail http://localhost:8080/healthz || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  ## CLI Services
+  # Main CLI Service
+  # CLI Console will be available at 9695-gitpod.workspace.url
+  cli:
+    container_name: kit_cli
+    build: ./cli
+    restart: always
+    ports:
+      - 9695
+    entrypoint: /usr/src/cli/entrypoint.gitpod.console.sh
+    depends_on:
+      hasura:
+        condition: service_healthy
+    volumes:
+      # Project Files
+      - ./hasura:/usr/src/hasura
+    environment:
+      HASURA_GRAPHQL_ADMIN_SECRET: adminsecret
+      CLI_MODE: console
+      CLI_RUN_MIGRATE: '[metadata, migrations]'
+      GITPOD_WORKSPACE_ID: ${GITPOD_WORKSPACE_ID}
+      GITPOD_WORKSPACE_CLUSTER_HOST: ${GITPOD_WORKSPACE_CLUSTER_HOST}
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.kit_cli.rule=Host(`9695-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}`)
+      - traefik.http.routers.kit_cli.entrypoints=web
+
+  # Responsible for backend API utilization
+  # Use the CLI service as your main entrypoint for CLI actions /  
+  cli_api:
+    container_name: kit_cli_api
+    build: ./cli
+    restart: always
+    expose:
+      - 9693
+    entrypoint: /usr/src/cli/entrypoint.gitpod.api.sh
+    depends_on:
+      hasura:
+        condition: service_healthy
+    environment:
+      HASURA_GRAPHQL_ADMIN_SECRET: adminsecret
+      GITPOD_WORKSPACE_ID: ${GITPOD_WORKSPACE_ID}
+      GITPOD_WORKSPACE_CLUSTER_HOST: ${GITPOD_WORKSPACE_CLUSTER_HOST}
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.kit_cli_api.rule=Host(`9693-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}`)
+      - traefik.http.routers.kit_cli_api.entrypoints=web
+
+  traefik:
+    image: traefik:v2.6
+    container_name: kit_traefik
+    command:
+      - --log.level=DEBUG
+      - --api.insecure=true
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
+    ports:
+      - 80:80
+      - 9693:80
+      - 9695:80
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro

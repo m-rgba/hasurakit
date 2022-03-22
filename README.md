@@ -2,15 +2,34 @@
 Services, helpers, and recipes for deploying your next Hasura instance.
 
 ## Getting Started
+### Run it locally with Docker
+Run everything in the repo with defaults:
+```
+docker-compose up
+```
+
+*or*
+
+
 Basic starter - setting up your initial Hasura + Postgres instance:
 ```
 docker-compose up postgres hasura
 ```
+and the run the specific services below you'd like to run (currently just CLI / CLI Console).
 
-Run CLI and Hasura with defaults:
-```
-docker-compose up
-```
+### Run with Gitpod - Develop in the Cloud
+
+This repo has been modified to be deployed with Gitpod for your cloud dev environment 🪄
+
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://github.com/m-rgba/hasurakit/tree/main)
+
+Recommend forking / cloning this repo -- all project files from CLI Console in Gitpod will be found in your `./hasura` folder and will be commit-able from Gitpod.
+
+This repo has a `.gitpod.yml` which runs a modified set of services at `docker-compose.gitpod.yml` which will deploy the environment.
+
+Special thanks to **Raphael + Chewy** for their tutorial on how they got everything working nicely (the Traefik + data API service combination was invaluable):
+- [Chewy Gitpod + Hasura Tutorial](https://we.gochewy.io/how-to-use-hasura-in-gitpod-without-port-forwarding/)
+- [Origial Repo](https://github.com/ephemerecreative/hasura-cli-gitpod-example)
 
 ---
 
@@ -45,10 +64,19 @@ All changes (metadata / SQL migrations) made in this Console will be saved to yo
 - The admin secret for your Hasura instances
 
 #### CLI_MODE
+- Default: `console`
 - `cli` / `console` / none
 - `console` will initialize a project folder which will be mirrored in the `/hasura` folder
 - `cli` will spawn a persistent CLI to interact with your Hasura instance.
     - This can be interacted with using:
+
+#### CLI_RUN_MIGRATE
+- Default: `[]`
+- [ `metadata` and/or `migrations` / none ]
+- Will run a deployment of metadata or migrations when your CLI container is run:
+    - `metadata` runs `hasura apply metadata`
+    - `migrations` runs `hasura apply migrations --all-databases`
+    - If `metadata` is selected it will also run `metadata reload metadata` to ensure consistency after migrations are run
 
 ```
 docker exec [container_name] hasura [command]
@@ -58,6 +86,7 @@ docker exec kit_cli hasura metadata apply
 ```
 - Removing the `CLI_MODE` variable will allow you to run the container for non-persistent use.
     - ex: Continuous integration workflows like deploying a Hasura instance with the `cli` container: ([Deploying with CLI](./recipes/cli-deploy))
+
 
 ---
 

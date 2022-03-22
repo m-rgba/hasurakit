@@ -1,6 +1,7 @@
 version: '3.6'
 services:
 
+  ## Default Hasura Services
   postgres:
     container_name: kit_postgres
     image: postgres:14
@@ -39,6 +40,7 @@ services:
       timeout: 3s
       retries: 5
 
+  ## CLI Service
   cli:
     container_name: kit_cli
     build: ./cli
