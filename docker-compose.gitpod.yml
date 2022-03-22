@@ -42,6 +42,8 @@ services:
       retries: 5
 
   ## CLI Services
+  # Main CLI Service
+  # CLI Console will be available at 9695-gitpod.workspace.url
   cli:
     container_name: kit_cli
     build: ./cli
@@ -56,7 +58,6 @@ services:
       # Project Files
       - ./hasura:/usr/src/hasura
     environment:
-      # Exclude protocol / use host.docker.internal if internal
       HASURA_GRAPHQL_ADMIN_SECRET: adminsecret
       CLI_MODE: console
       CLI_RUN_MIGRATE: '[metadata, migrations]'
@@ -67,6 +68,8 @@ services:
       - traefik.http.routers.kit_cli.rule=Host(`9695-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}`)
       - traefik.http.routers.kit_cli.entrypoints=web
 
+  # Responsible for backend API utilization
+  # Use the CLI service as your main entrypoint for CLI actions /  
   cli_api:
     container_name: kit_cli_api
     build: ./cli
@@ -77,11 +80,7 @@ services:
     depends_on:
       hasura:
         condition: service_healthy
-    volumes:
-      # Project Files
-      - ./hasura:/usr/src/hasura
     environment:
-      # Exclude protocol / use host.docker.internal if internal
       HASURA_GRAPHQL_ADMIN_SECRET: adminsecret
       GITPOD_WORKSPACE_ID: ${GITPOD_WORKSPACE_ID}
       GITPOD_WORKSPACE_CLUSTER_HOST: ${GITPOD_WORKSPACE_CLUSTER_HOST}
