@@ -1,0 +1,65 @@
+version: '3.6'
+services:
+  cli:
+    container_name: kit_cli
+    build: ./cli
+    restart: always
+    ports:
+      - 9695:9695
+    depends_on:
+      hasura:
+        condition: service_healthy
+    volumes:
+      # Project Files
+      - ./hasura:/usr/src/hasura
+    environment:
+      # Exclude protocol / use host.docker.internal if internal
+      HASURA_URL: host.docker.internal:8080
+      HASURA_PROTOCOL: HTTP://
+      HASURA_GRAPHQL_ADMIN_SECRET: adminsecret
+      CLI_MODE: console
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.hasura_cli_console.rule=Host(`9695-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}`)
+      - traefik.http.routers.hasura_cli_console.entrypoints=web
+
+  cli_api:
+    container_name: kit_cli_api
+    build: ./cli
+    restart: always
+    expose:
+      - 9693:9693
+    depends_on:
+      hasura:
+        condition: service_healthy
+    volumes:
+      # Project Files
+      - ./hasura:/usr/src/hasura
+    command:  hasura console --log-level DEBUG --address "kit_cli_api" --no-browser 
+    environment:
+      # Exclude protocol / use host.docker.internal if internal
+      HASURA_URL: host.docker.internal:8080
+      HASURA_PROTOCOL: HTTP://
+      HASURA_GRAPHQL_ADMIN_SECRET: adminsecret
+      CLI_MODE: console
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.hasura_cli_api.rule=Host(`9693-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}`)
+      - traefik.http.routers.hasura_cli_api.entrypoints=web
+
+  traefik:
+    image: traefik:v2.6
+    container_name: traefik
+    command:
+      - --log.level=DEBUG
+      - --api.insecure=true
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
+    ports:
+      - 80:80
+      - 8080:8080
+      - 9693:80
+      - 9695:80
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
