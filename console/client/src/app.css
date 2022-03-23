@@ -1,0 +1,148 @@
+/* Default Font Size */
+html {
+  font-size: 14px;
+  font-feature-settings: 'kern' 1, 'ss02' 1;
+}
+
+/* Font Declarations: IBM Plex */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style:  normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/IBMPlexMono-Regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style:  italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/IBMPlexMono-Italic.woff2") format("woff2");
+}
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style:  normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/IBMPlexMono-SemiBold.woff2") format("woff2");
+}
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style:  italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/IBMPlexMono-SemiBold.woff2") format("woff2");
+}
+
+/* Font Declarations: Inter*/
+@font-face {
+  font-family: 'Inter';
+  font-style:  normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/Inter-Regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: 'Inter';
+  font-style:  italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/Inter-Italic.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style:  normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/Inter-SemiBold.woff2") format("woff2");
+}
+@font-face {
+  font-family: 'Inter';
+  font-style:  italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/Inter-SemiBoldItalic.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style:  normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url("/fonts/Inter-ExtraBold.woff2") format("woff2");
+}
+@font-face {
+  font-family: 'Inter';
+  font-style:  italic;
+  font-weight: 800;
+  font-display: swap;
+  src: url("/fonts/Inter-ExtraBoldItalic.woff2") format("woff2");
+}
+
+/* Write your global styles here, in PostCSS syntax */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Tailwind - Roll-up classes for consistency / shortcuts */
+@layer components {
+  .btn-primary {
+    @apply flex items-center justify-center h-8 px-2 whitespace-nowrap font-semibold text-white bg-brandBlue-400 border border-brandBlue-800 rounded shadow-sm  hover:shadow focus:outline-none focus:bg-gradient-to-t focus:from-brandBlue-700 focus:to-brandBlue-700 focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-black focus:ring-brandBlue-100 dark:focus:ring-brandBlue-400;
+  }
+  .btn-default {
+    @apply flex items-center justify-center h-8 px-2 whitespace-nowrap font-semibold text-slate-900 dark:text-slate-50 bg-slate-50 dark:bg-transparent bg-gradient-to-t from-slate-100 to-white dark:from-transparent dark:to-transparent border border-slate-400 rounded shadow-sm hover:shadow focus:outline-none focus:bg-gradient-to-t focus:from-slate-100 focus:to-slate-100 focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-black focus:ring-brandBlue-100 dark:focus:ring-brandBlue-400;
+  }
+  .input-base{
+    @apply block w-full h-8 px-2 py-0 dark:placeholder-gray-400 border border-slate-400 dark:bg-slate-600 rounded shadow-sm hover:border-slate-500 focus:outline-none focus:ring-2 focus:ring-brandBlue-100/50 focus:border-brandBlue-600 dark:hover:border-slate-300 dark:focus:ring-brandBlue-400/30 dark:focus:border-brandBlue-400;
+  }
+
+  .btn-primary.lrg, .btn-default.lrg, .input-base.lrg{
+    @apply h-12 text-xl px-3
+  }
+}
+
+/* Background Grid */
+.bg-grid{
+  background: linear-gradient(90deg, rgb(241 245 249) 16px, transparent 1%) center, linear-gradient(rgb(241 245 249) 16px, transparent 1%) center, rgb(100 116 139);
+  background-size: 17px 17px;
+}
+.bg-grid-dark{
+  background: linear-gradient(90deg, rgb(46 65 87) 16px, transparent 1%) center, linear-gradient(rgb(46 65 87) 16px, transparent 1%) center, rgb(100 116 139);
+  background-size: 17px 17px;
+}
+
+/* CodeMirror */
+.CodeMirror {
+    height: 100% !important;
+}
+.CodeMirror-readOnly > .CodeMirror * .CodeMirror-cursor{
+    display: none;
+}
+.CodeMirror-readOnly * .CodeMirror-scroll{
+    background: #f1f5f9;
+}
+
+/* SplitJS */
+.gutter.gutter-horizontal{
+    position: relative;
+    z-index: 30;
+    background: rgb(174 186 201 / 40%);
+}
+.gutter.gutter-vertical{
+    position: relative;
+    z-index: 30;
+    background: rgb(174 186 201 / 40%);
+}
+.gutter.gutter-horizontal:hover {
+    cursor: col-resize;
+    background: #1699e2;
+    border-left:1px solid #1699e2;
+    border-right:1px solid #1699e2;
+}
+.gutter.gutter-vertical:hover {
+    cursor: row-resize;
+    background: #1699e2;
+    border-top:1px solid #1699e2;
+    border-bottom:1px solid #1699e2;
+}

@@ -1,0 +1,38 @@
+{
+  "name": "watchtower-client",
+  "version": "0.0.1",
+  "type": "module",
+  "license": "Apache-2.0",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@joshnuss/svelte-codemirror": "^0.2.6",
+    "@sveltejs/vite-plugin-svelte": "^1.0.0-next.30",
+    "@tailwindcss/forms": "^0.4.0",
+    "@tailwindcss/line-clamp": "^0.3.0",
+    "@tailwindcss/typography": "^0.5.0",
+    "@tyk-technologies/graphiql": "^1.1.7-beta.1",
+    "autoprefixer": "^10.4.0",
+    "codemirror": "^5.64.0",
+    "codemirror-graphql": "^1.2.10",
+    "concurrently": "^7.0.0",
+    "cssnano": "^5.0.8",
+    "graphql": "^15.8.0",
+    "postcss": "^8.4.4",
+    "postcss-load-config": "^3.1.0",
+    "prismjs": "^1.26.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "split.js": "^1.6.4",
+    "svelte": "^3.44.0",
+    "svelte-icons-pack": "^1.4.6",
+    "svelte-navigator": "^3.1.5",
+    "svelte-preprocess": "^4.9.8",
+    "tailwindcss": "^3.0.0",
+    "tailwindcss-named-groups": "^0.0.5",
+    "vite": "^2.7.0"
+  }
+}
