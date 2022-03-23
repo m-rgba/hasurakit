@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Add Gitpod user / take ownership
-chown :33333 /usr/src/hasura
+chown 33333:33333 /usr/src/hasura
 chmod g+s /usr/src/hasura
 
 cd /usr/src/hasura
