@@ -1,5 +1,9 @@
 #!/bin/bash
-chown -R gitpod /usr/src/hasura
+
+# Add Gitpod user / take ownership
+chown -R 33333:33333 /usr/src/hasura
+chmod g+s /usr/src/hasura
+
 cd /usr/src/hasura
 
 echo "Starting Console API 💻 (https://9693-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST})"
