@@ -40,6 +40,7 @@ then
         echo "Copying current project (to /.backup) 🕐 Just in-case 👌"
         backupfolder=$(date +%Y%m%d-%H%M%S)
         mkdir -p ./.backup/"$backupfolder"
+        chown -R 33333:33333 /usr/src/hasura
         cp -R * ./.backup/"$backupfolder"
         # cp -r !(./.backup) ./.backup/"$backupfolder"
         echo "Starting CLI 🕸️ & Console 💻 (https://9693-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST})"
@@ -60,6 +61,7 @@ then
         echo "Copying current project (to /.backup) 🕐 Just in-case 👌"
         backupfolder=$(date +%Y%m%d-%H%M%S)
         mkdir -p ./.backup/"$backupfolder"
+        chown -R 33333:33333 /usr/src/hasura
         cp -R * ./.backup/"$backupfolder"
         # cp -r !(./.backup) ./.backup/"$backupfolder"
         echo "Persistent CLI Running... 🕸️"
