@@ -1,5 +1,6 @@
 # HasuraKit
-Services, helpers, and recipes for deploying your next Hasura instance.
+Services, helpers, and recipes for deploying your next Hasura instance. \
+This is an non-official repo of useful auxillary Hasura enhancements - there may be 🐉 and breaking changes (hopefully light 🤞) until v1.
 
 ## Getting Started
 ### Run it locally with Docker
