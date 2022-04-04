@@ -34,11 +34,6 @@ services:
       HASURA_GRAPHQL_JWT_SECRET: '{"type":"HS256", "key":"generateasecurepasswordforyourjwtkey", "issuer":"hasura-auth"}'
       HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
       HASURA_GRAPHQL_DEV_MODE: 'true'
-    healthcheck:
-      test: ["CMD-SHELL", "apt-get update -y && apt-get install -y curl && curl --fail http://localhost:8080/healthz || exit 1"]
-      interval: 5s
-      timeout: 3s
-      retries: 5
 
   ## CLI Service
   cli:
@@ -48,9 +43,6 @@ services:
     ports:
       - 9693:9693
       - 9695:9695
-    depends_on:
-      hasura:
-        condition: service_healthy
     volumes:
       # Project Files
       - ./hasura:/usr/src/hasura
