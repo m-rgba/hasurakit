@@ -35,11 +35,6 @@ services:
       HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
       HASURA_GRAPHQL_DEV_MODE: 'true'
       HASURA_GRAPHQL_CORS_DOMAINS: 'https://*-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}'
-    healthcheck:
-      test: ["CMD-SHELL", "apt-get update -y && apt-get install -y curl && curl --fail http://localhost:8080/healthz || exit 1"]
-      interval: 5s
-      timeout: 3s
-      retries: 5
 
   ## CLI Services
   # Main CLI Service
@@ -51,9 +46,6 @@ services:
     ports:
       - 9695
     entrypoint: /usr/src/cli/entrypoint.gitpod.console.sh
-    depends_on:
-      hasura:
-        condition: service_healthy
     volumes:
       # Project Files
       - ./hasura:/usr/src/hasura
@@ -77,9 +69,6 @@ services:
     expose:
       - 9693
     entrypoint: /usr/src/cli/entrypoint.gitpod.api.sh
-    depends_on:
-      hasura:
-        condition: service_healthy
     volumes:
       - ./hasura:/usr/src/hasura
     environment:
