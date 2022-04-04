@@ -7,22 +7,22 @@ services:
     working_dir: /home/node/app/api
     command: bash -c "yarn install && yarn dev"
     ports:
-      - 3001:3001
+      - 3210:3210
     volumes:
       - ./api:/home/node/api
     environment:
       HASURA_PROTOCOL: HTTP://
       HASURA_URL: host.docker.internal:8080
       HASURA_GRAPHQL_ADMIN_SECRET: adminsecret
-      
-  console:
-    container_name: kit_console
-    image: node:16
-    working_dir: /home/node/app/console
-    command: bash -c "yarn install && yarn dev"
-    ports:
-      - 3000:3000
-    volumes:
-      - ./client:/home/node/console
-    environment:
-      CONSOLE_API: HTTP://host.docker.internal:3001
+
+  # console:
+  #   container_name: kit_console
+  #   image: node:16
+  #   working_dir: /home/node/app/console
+  #   command: bash -c "yarn install && yarn dev"
+  #   ports:
+  #     - 3333:3333
+  #   volumes:
+  #     - ./client:/home/node/console
+  #   environment:
+  #     CONSOLE_API: HTTP://host.docker.internal:3210
